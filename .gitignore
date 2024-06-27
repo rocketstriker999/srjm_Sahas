@@ -29,7 +29,7 @@ build/
 ### project Files ###
 node_modules/
 package-lock.json
-log
+log/
 HELP.md
 target/
 .mvn
