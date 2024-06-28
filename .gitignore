@@ -33,3 +33,4 @@ log/
 HELP.md
 target/
 .mvn
+site/

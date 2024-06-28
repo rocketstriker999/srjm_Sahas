@@ -5,8 +5,9 @@ module.exports = {
 		// use this to check original paths:
 		// console.log(paths)
 
+
 		const root = paths.appPath
-		paths.appBuild = `${root}/src/main/resources/public`
+		paths.appBuild = `${root}/src/main/resources/site`
 		paths.appPublic = `${root}/src/main/js/public`
 		paths.appHtml = `${root}/src/main/js/public/index.html`
 		paths.appIndexJs = `${root}/src/main/js/index.js`
@@ -24,6 +25,7 @@ module.exports = {
 		paths.ownNodeModules = `${root}/node_modules/react-scripts/node_modules`
 		// paths.appTypeDeclarations = `${root}/src/react-app-env.d.ts`
 		// paths.ownTypeDeclarations = `${root}/node_modules/react-scripts/lib/react-app.d.ts`
+
 		return paths;
 	},
 
