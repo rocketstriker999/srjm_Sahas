@@ -27,6 +27,7 @@ build/
 .vscode/
 
 ### project Files ###
+.gradle/
 node_modules/
 package-lock.json
 log/
