@@ -40,16 +40,20 @@ tasks.named('test') {
 
 //React Project Build 
 task buildReact(type: Exec) {
-    commandLine 'npm', 'run', 'build'
+    
+    commandLine 'sh', '-c', 'npm install && npm run build'
 }
 
 // Define clean task to delete 'web-app' folder
 task cleanReact(type: Delete) {
+    delete 'node_modules'
     delete 'src/main/resources/web-app'
 }
 
-//all below gradle commands are dependent over npm build task which builds react
-compileJava.dependsOn buildReact
+tasks.named('clean') {
+    dependsOn cleanReact
+}
 
-// Include cleanWebApp in the clean task
-clean.dependsOn cleanReact
+tasks.named('build') {
+    dependsOn buildReact
+}
