@@ -1,35 +1,55 @@
 plugins {
-	id 'java'
-	id 'org.springframework.boot' version '3.3.1'
-	id 'io.spring.dependency-management' version '1.1.5'
+    id 'java'
+    id 'org.springframework.boot' version '3.3.1'
+    id 'io.spring.dependency-management' version '1.1.5'
 }
 
 group = 'com.hammerbyte'
 version = '0.0.1-SNAPSHOT'
 
+
 java {
-	toolchain {
-		languageVersion = JavaLanguageVersion.of(17)
-	}
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
 }
 
 repositories {
-	mavenCentral()
+    mavenCentral()
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter'
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.boot:spring-boot-starter-data-rest'
-	runtimeOnly 'com.mysql:mysql-connector-j'
+    runtimeOnly 'com.mysql:mysql-connector-j'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
+
+//Junit5
 tasks.named('test') {
-	useJUnitPlatform()
+    useJUnitPlatform()
 }
+
+//React Project Build 
+task buildReact(type: Exec) {
+    commandLine 'npm', 'run', 'build'
+}
+
+// Define clean task to delete 'web-app' folder
+task cleanReact(type: Delete) {
+    delete 'src/main/resources/web-app'
+}
+
+//all below gradle commands are dependent over npm build task which builds react
+compileJava.dependsOn buildReact
+
+// Include cleanWebApp in the clean task
+clean.dependsOn cleanReact
