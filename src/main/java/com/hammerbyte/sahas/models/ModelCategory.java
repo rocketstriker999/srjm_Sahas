@@ -1,4 +1,4 @@
-package com.hammerbyte.sahas.model;
+package com.hammerbyte.sahas.models;
 
 import java.util.Set;
 
@@ -23,20 +23,17 @@ import lombok.ToString;
 @Setter
 @ToString
 @Entity
-@Table(name = "products")
-public class ModelProduct {
+@Table(name = "categories")
+public class ModelCategory {
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long productId;
-    private String productName;
-    private String productImage;
-    private String productDescription;
-    private double productPrice;
+    private Long categoryId;
+    private String categoryName;
+    private String categoryPhoto;
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id")
-    private Set<ModelCourse> modelCourses;
-    private boolean productVisible = true;
-
-   
+    @JoinColumn(name = "category_id")
+    private Set<ModelProduct> modelProducts;
+    private boolean categoryVisible = true;
 }

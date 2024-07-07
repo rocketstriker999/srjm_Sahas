@@ -1,4 +1,4 @@
-package com.hammerbyte.sahas.model;
+package com.hammerbyte.sahas.models;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
