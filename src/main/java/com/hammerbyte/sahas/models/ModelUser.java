@@ -3,7 +3,8 @@ package com.hammerbyte.sahas.models;
 import java.util.Collection;
 import java.util.List;
 
-
+import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -24,6 +25,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import java.util.Date;
 
 //keep class name AppUser - Conflicts with User Class From Spring Security
 
@@ -34,9 +36,8 @@ import lombok.ToString;
 @ToString
 @Entity
 @Table(name = "users")
-public class ModelUser implements UserDetails{
+public class ModelUser{
     
-
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String userId;
@@ -53,39 +54,8 @@ public class ModelUser implements UserDetails{
     @Enumerated(EnumType.STRING)
     private EnumUserRole userRole=EnumUserRole.USER;
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-       return List.of(new SimpleGrantedAuthority("ROLE_" + userRole.name()));
-    }
-
-    @Override
-    public String getPassword() {
-        return userPassword;
-    }
-
-    @Override
-    public String getUsername() {
-        return userId;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true; // Implement your logic here
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true; // Implement your logic here
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true; // Implement your logic here
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true; // Implement your logic here
-    }
+    @Column(updatable = false)
+    @CreationTimestamp  
+    private Date createdAt;
 
 }

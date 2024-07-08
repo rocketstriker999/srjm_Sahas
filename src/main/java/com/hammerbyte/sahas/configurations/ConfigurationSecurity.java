@@ -1,5 +1,7 @@
 package com.hammerbyte.sahas.configurations;
 
+import java.util.Optional;
+
 import javax.crypto.spec.SecretKeySpec;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -14,6 +16,7 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -23,7 +26,10 @@ import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+
+import com.hammerbyte.sahas.models.ModelUser;
 import com.hammerbyte.sahas.repositories.RepositoryUser;
+import com.hammerbyte.sahas.services.ServiceUser;
 import com.nimbusds.jose.jwk.source.ImmutableSecret;
 
 import lombok.NoArgsConstructor;
@@ -36,7 +42,7 @@ public class ConfigurationSecurity {
     @Value("${app.jwt.secret}")
     private String jwtSecret;
 
-    private RepositoryUser repositoryUser;
+    private ServiceUser serviceUser;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
@@ -72,8 +78,7 @@ public class ConfigurationSecurity {
     // It will try to look if we really have such user in db
     @Bean
     public UserDetailsService userDetailsService() {
-        return userId -> repositoryUser.findById(userId)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        return userId -> serviceUser.findSpringUserById(userId);
     }
 
     // register a single bean as password encoder in case of signup from user
