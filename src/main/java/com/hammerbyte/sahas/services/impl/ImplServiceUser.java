@@ -5,42 +5,37 @@ import java.util.Optional;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
 
 import com.hammerbyte.sahas.models.ModelUser;
 import com.hammerbyte.sahas.repositories.RepositoryUser;
 import com.hammerbyte.sahas.services.ServiceUser;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+
+@Service
+@AllArgsConstructor
+@Getter
+@Setter
 public class ImplServiceUser implements ServiceUser {
 
     private RepositoryUser repositoryUser;
 
     @Override
-    public ModelUser findUserById(String userId) {
-
-        return repositoryUser.findById(userId).get();
-
+    public Optional<ModelUser> findUserByEmail(String userEmail) {
+        return repositoryUser.findByEmail(userEmail);
     }
 
+    // being called by spring authentication
     @Override
-    public ModelUser findUserByEmail(String userEmail) {
-
-        // need to impelment frthure
-
-        return null;
-
-    }
-
-    //being called by spring authentication
-    @Override
-    public UserDetails findSpringUserById(String userId) throws UsernameNotFoundException {
-        Optional<ModelUser> modelUser = repositoryUser.findById(userId);
-
-        if (modelUser.isPresent()) {
-            return User.withUsername(modelUser.get().getUserName()).password(modelUser.get().getUserPassword())
-                    .roles(modelUser.get().getUserRole().name()).build();
-        } else {
-            throw new UsernameNotFoundException("User Not Found");
-        }
+    public UserDetails findSpringUserByEmail(String userEmail) {
+        Optional<ModelUser> modelUser = findUserByEmail(userEmail);
+        return modelUser.isPresent()
+                ? User.withUsername(modelUser.get().getUserEmail()).password(modelUser.get().getUserPassword())
+                        .roles(modelUser.get().getUserRole().name()).build()
+                : null;
 
     }
 

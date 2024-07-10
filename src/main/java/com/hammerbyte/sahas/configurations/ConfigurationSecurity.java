@@ -1,13 +1,9 @@
 package com.hammerbyte.sahas.configurations;
 
-import java.util.Optional;
-
 import javax.crypto.spec.SecretKeySpec;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -16,9 +12,7 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
@@ -26,15 +20,13 @@ import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-
-import com.hammerbyte.sahas.models.ModelUser;
-import com.hammerbyte.sahas.repositories.RepositoryUser;
 import com.hammerbyte.sahas.services.ServiceUser;
 import com.nimbusds.jose.jwk.source.ImmutableSecret;
-
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 
-@NoArgsConstructor
+@RequiredArgsConstructor
 @Configuration
 @EnableWebSecurity
 public class ConfigurationSecurity {
@@ -42,6 +34,7 @@ public class ConfigurationSecurity {
     @Value("${app.jwt.secret}")
     private String jwtSecret;
 
+    @NonNull
     private ServiceUser serviceUser;
 
     @Bean
@@ -78,7 +71,7 @@ public class ConfigurationSecurity {
     // It will try to look if we really have such user in db
     @Bean
     public UserDetailsService userDetailsService() {
-        return userId -> serviceUser.findSpringUserById(userId);
+        return userEmail -> serviceUser.findSpringUserByEmail(userEmail);
     }
 
     // register a single bean as password encoder in case of signup from user

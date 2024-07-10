@@ -1,13 +1,14 @@
 package com.hammerbyte.sahas.services;
 
+import java.util.Optional;
+
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.hammerbyte.sahas.models.ModelUser;
 
 public interface ServiceUser {
 
-    public ModelUser findUserById(String userId);
-    public ModelUser findUserByEmail(String userEmail);
-    public UserDetails findSpringUserById(String userId);
+    public Optional<ModelUser> findUserByEmail(String userEmail);
+    public UserDetails findSpringUserByEmail(String userEmail);
 
 }
