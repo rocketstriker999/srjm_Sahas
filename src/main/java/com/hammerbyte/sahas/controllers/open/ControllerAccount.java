@@ -24,6 +24,11 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 @AllArgsConstructor
 @RestController
 @RequestMapping("/account")
@@ -88,5 +93,14 @@ public class ControllerAccount {
             responseBody.put("user", serviceAccount.createAccount(modelUser));
             return ResponseEntity.ok(responseBody);
         }
+    }
+
+    public void myf(){
+        
+        
+        List l = List.of(1,2,3,4,5);
+
+        List<Integer> greaterThanThree = l.stream().filter(n->n>3).collect(Collector.toList());
+
     }
 }

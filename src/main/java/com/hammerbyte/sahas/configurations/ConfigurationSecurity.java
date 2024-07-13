@@ -20,9 +20,10 @@ import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+
+import com.hammerbyte.sahas.enums.EnumUserRole;
 import com.hammerbyte.sahas.services.ServiceUser;
 import com.nimbusds.jose.jwk.source.ImmutableSecret;
-import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
@@ -45,6 +46,10 @@ public class ConfigurationSecurity {
         httpSecurity.authorizeHttpRequests(auth -> {
             // remove security for /account path
             auth.requestMatchers("/account/**").permitAll();
+            //add Admin path
+            auth.requestMatchers("/hadmin/**").hasRole(EnumUserRole.HADMIN.name());
+            auth.requestMatchers("/fadmin/**").hasAnyRole(EnumUserRole.FADMIN.name(),EnumUserRole.HADMIN.name());
+
             // keep security for all other requests
             auth.anyRequest().authenticated();
         });
