@@ -9,6 +9,7 @@ import com.hammerbyte.sahas.models.ModelUser;
 import com.hammerbyte.sahas.services.ServiceAccount;
 import com.hammerbyte.sahas.services.ServiceJWT;
 import com.hammerbyte.sahas.services.ServiceUser;
+import com.nimbusds.jwt.JWT;
 
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -40,6 +41,27 @@ public class ControllerAccount {
     private ServiceJWT serviceJWT;
     private BCryptPasswordEncoder passwordEncoder;
     private AuthenticationManager authenticationManager;
+
+     // user can send email and password to authenticate and get jwt token back
+     @PostMapping("/logout")
+     public ResponseEntity<Object> logout(@Valid @RequestBody DTOSignup dtoSignup, BindingResult bindingResult){
+
+        HashMap<String, Object> responseBody = new HashMap<>();
+
+
+        if (bindingResult.hasErrors()) {
+
+            for (ObjectError objectError : bindingResult.getAllErrors())
+                responseBody.put(objectError.getObjectName(), objectError.getDefaultMessage());
+            return ResponseEntity.badRequest().body(responseBody);
+        }else{
+            
+            //destroyWT token from authorization header 
+
+        }
+
+
+     }
 
     // user can send email and password to authenticate and get jwt token back
     @PostMapping("/login")
@@ -95,12 +117,5 @@ public class ControllerAccount {
         }
     }
 
-    public void myf(){
-        
-        
-        List l = List.of(1,2,3,4,5);
-
-        List<Integer> greaterThanThree = l.stream().filter(n->n>3).collect(Collector.toList());
-
-    }
+   
 }

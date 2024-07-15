@@ -19,6 +19,8 @@ import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
+import org.springframework.security.oauth2.server.resource.web.BearerTokenAuthenticationEntryPoint;
+import org.springframework.security.oauth2.server.resource.web.access.BearerTokenAccessDeniedHandler;
 import org.springframework.security.web.SecurityFilterChain;
 
 import com.hammerbyte.sahas.enums.EnumUserRole;
@@ -42,13 +44,17 @@ public class ConfigurationSecurity {
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         // disable csrf for api requests
         httpSecurity.csrf(csrf -> csrf.disable());
+        // allow cors
+        httpSecurity.cors(cors -> cors.disable());
+        // disable basic auth
+        httpSecurity.httpBasic(basicAuth -> basicAuth.disable());
         // apply path security
         httpSecurity.authorizeHttpRequests(auth -> {
             // remove security for /account path
             auth.requestMatchers("/account/**").permitAll();
-            //add Admin path
+            // add Admin path
             auth.requestMatchers("/hadmin/**").hasRole(EnumUserRole.HADMIN.name());
-            auth.requestMatchers("/fadmin/**").hasAnyRole(EnumUserRole.FADMIN.name(),EnumUserRole.HADMIN.name());
+            auth.requestMatchers("/fadmin/**").hasAnyRole(EnumUserRole.FADMIN.name(), EnumUserRole.HADMIN.name());
 
             // keep security for all other requests
             auth.anyRequest().authenticated();
@@ -57,6 +63,10 @@ public class ConfigurationSecurity {
         httpSecurity.oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()));
         // make sessions stateless
         httpSecurity.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+        // add exception handling
+        httpSecurity.exceptionHandling(
+                exceptions -> exceptions.authenticationEntryPoint(new BearerTokenAuthenticationEntryPoint())
+                        .accessDeniedHandler(new BearerTokenAccessDeniedHandler()));
 
         // build and return the Security Filter Chain
         return httpSecurity.build();
