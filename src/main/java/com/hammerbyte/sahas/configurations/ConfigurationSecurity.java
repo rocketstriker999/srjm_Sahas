@@ -11,73 +11,71 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
-import org.springframework.security.oauth2.jwt.JwtDecoder;
-import org.springframework.security.oauth2.jwt.JwtEncoder;
-import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
-import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
-import org.springframework.security.oauth2.server.resource.web.BearerTokenAuthenticationEntryPoint;
-import org.springframework.security.oauth2.server.resource.web.access.BearerTokenAccessDeniedHandler;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.SecurityFilterChain;
 
 import com.hammerbyte.sahas.enums.EnumUserRole;
-import com.hammerbyte.sahas.services.ServiceUser;
-import com.nimbusds.jose.jwk.source.ImmutableSecret;
+import com.hammerbyte.sahas.models.ModelUser;
+import com.hammerbyte.sahas.repositories.RepositoryUser;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+
+import java.util.Optional;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Configuration
 @EnableWebSecurity
 public class ConfigurationSecurity {
 
-    @Value("${app.jwt.secret}")
-    private String jwtSecret;
-
+    
     @NonNull
-    private ServiceUser serviceUser;
+    private RepositoryUser repositoryUser;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         // disable csrf for api requests
-        httpSecurity.csrf(csrf -> csrf.disable());
+        httpSecurity.csrf(csrf -> csrf.disable())
         // allow cors
-        httpSecurity.cors(cors -> cors.disable());
-        // disable basic auth
-        httpSecurity.httpBasic(basicAuth -> basicAuth.disable());
+        .cors(cors -> cors.disable())
+        // disable basic auth with form submission only jwt will be allowed
+        .httpBasic(AbstractHttpConfigurer::disable)
+        .formLogin(AbstractHttpConfigurer::disable)
         // apply path security
-        httpSecurity.authorizeHttpRequests(auth -> {
-            // remove security for /account path
-            auth.requestMatchers("/account/**").permitAll();
-            // add Admin path
-            auth.requestMatchers("/hadmin/**").hasRole(EnumUserRole.HADMIN.name());
-            auth.requestMatchers("/fadmin/**").hasAnyRole(EnumUserRole.FADMIN.name(), EnumUserRole.HADMIN.name());
-
-            // keep security for all other requests
-            auth.anyRequest().authenticated();
-        });
+        .authorizeHttpRequests(auth ->
+        // remove security for /account path
+            auth
+                    .requestMatchers("/account/**").permitAll()
+                    .requestMatchers("/api/**").hasRole(EnumUserRole.FADMIN.name())
+                    .anyRequest().authenticated()
+        // auth.requestMatchers("/f admin/**").hasAnyRole(EnumUserRole.FADMIN.name(),
+        // EnumUserRole.HADMIN.name());
+        // keep security for all other requests
+        // auth.anyRequest().authenticated();
+        )
         // ask to use oauth2 Resource Server with JWT encoder and decoder inbuilt
-        httpSecurity.oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()));
+        
         // make sessions stateless
-        httpSecurity.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+        .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         // add exception handling
-        httpSecurity.exceptionHandling(
-                exceptions -> exceptions.authenticationEntryPoint(new BearerTokenAuthenticationEntryPoint())
-                        .accessDeniedHandler(new BearerTokenAccessDeniedHandler()));
+    
 
         // build and return the Security Filter Chain
         return httpSecurity.build();
     }
 
+
+   
     // return default Authentication Manager for single usage
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) {
         DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
         daoAuthenticationProvider.setUserDetailsService(userDetailsService());
-        daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
         return new ProviderManager(daoAuthenticationProvider);
     }
 
@@ -86,25 +84,15 @@ public class ConfigurationSecurity {
     // It will try to look if we really have such user in db
     @Bean
     public UserDetailsService userDetailsService() {
-        return userEmail -> serviceUser.findSpringUserByEmail(userEmail);
+        return userEmail -> {
+            Optional<ModelUser> modelUser = repositoryUser.findByUserEmail(userEmail);
+            if (modelUser.isPresent()) {
+                return new User(modelUser.get().getUserEmail(), modelUser.get().getUserPassword(),List.of(new SimpleGrantedAuthority(modelUser.get().getUserRole().name())));
+            } else {
+                throw new UsernameNotFoundException("Invalid Credentials");
+            }
+        };
     }
-
-    // register a single bean as password encoder in case of signup from user
-    @Bean
-    public BCryptPasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
-    @Bean
-    public JwtDecoder jwtDecoder() {
-        return NimbusJwtDecoder.withSecretKey(new SecretKeySpec(jwtSecret.getBytes(), ""))
-                .macAlgorithm(MacAlgorithm.HS256).build();
-    }
-
-    // Single Bean JWT Encoder Used to Encode JWT
-    @Bean
-    public JwtEncoder jwtEncoder() {
-        return new NimbusJwtEncoder(new ImmutableSecret<>(jwtSecret.getBytes()));
-    }
+    
 
 }

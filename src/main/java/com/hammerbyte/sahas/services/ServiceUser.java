@@ -8,7 +8,6 @@ import com.hammerbyte.sahas.models.ModelUser;
 
 public interface ServiceUser {
 
-    public Optional<ModelUser> findUserByEmail(String userEmail);
-    public UserDetails findSpringUserByEmail(String userEmail);
+    public Optional<ModelUser> findByUserEmail(String userEmail);
 
 }

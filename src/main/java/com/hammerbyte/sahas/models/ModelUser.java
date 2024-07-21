@@ -1,17 +1,8 @@
 package com.hammerbyte.sahas.models;
 
-import java.util.Collection;
-import java.util.List;
-
 import org.hibernate.annotations.CreationTimestamp;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-
 import com.hammerbyte.sahas.enums.EnumUserRole;
 
-import jakarta.annotation.Generated;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -52,7 +43,7 @@ public class ModelUser{
     private String userPassword;
 
     @Enumerated(EnumType.STRING)
-    private EnumUserRole userRole=EnumUserRole.USER;
+    private EnumUserRole userRole=EnumUserRole.FADMIN;
 
     @Column(updatable = false)
     @CreationTimestamp  

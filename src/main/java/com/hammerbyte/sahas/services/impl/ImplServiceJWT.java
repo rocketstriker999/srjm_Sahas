@@ -23,14 +23,9 @@ import lombok.Setter;
 @Setter
 public class ImplServiceJWT implements ServiceJWT {
 
-    @lombok.NonNull
-    private JwtEncoder jwtEncoder;
+   
 
-    @Value("${app.jwt.issuer}")
-    private String jwtIssuer;
-
-    @Value("${app.jwt.expire}")
-    private Long jwtExpire;
+    
 
     @Override
     public String createJWT(ModelUser modelUser) {
@@ -43,7 +38,7 @@ public class ImplServiceJWT implements ServiceJWT {
                         .issuedAt(now)
                         .expiresAt(now.plusSeconds(jwtExpire))
                         .subject(modelUser.getUserEmail())
-                        .claim("role", modelUser.getUserRole())
+                        .claim("role", modelUser.getUserRole().name())
                         .build()))
                 .getTokenValue();
     }

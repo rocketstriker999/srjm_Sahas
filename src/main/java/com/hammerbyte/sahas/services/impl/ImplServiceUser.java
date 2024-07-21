@@ -2,9 +2,6 @@ package com.hammerbyte.sahas.services.impl;
 
 import java.util.Optional;
 
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.hammerbyte.sahas.models.ModelUser;
@@ -24,19 +21,10 @@ public class ImplServiceUser implements ServiceUser {
     private RepositoryUser repositoryUser;
 
     @Override
-    public Optional<ModelUser> findUserByEmail(String userEmail) {
-        return repositoryUser.findByEmail(userEmail);
+    public Optional<ModelUser> findByUserEmail(String userEmail) {
+        return repositoryUser.findByUserEmail(userEmail);
     }
 
-    // being called by spring authentication
-    @Override
-    public UserDetails findSpringUserByEmail(String userEmail) {
-        Optional<ModelUser> modelUser = findUserByEmail(userEmail);
-        return modelUser.isPresent()
-                ? User.withUsername(modelUser.get().getUserEmail()).password(modelUser.get().getUserPassword())
-                        .roles(modelUser.get().getUserRole().name()).build()
-                : null;
-
-    }
+   
 
 }

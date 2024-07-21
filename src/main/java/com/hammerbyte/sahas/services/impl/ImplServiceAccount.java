@@ -18,17 +18,15 @@ import lombok.Setter;
 public class ImplServiceAccount implements ServiceAccount{
 
     private RepositoryUser repositoryUser;
-    // private PasswordEncoder passwordEncoder;
-    // private AuthenticationManager authenticationManager;
-    
+   
     @Override
     public ModelUser createAccount(ModelUser modelUser) {
         return repositoryUser.save(modelUser);       
     }
 
     @Override
-    public ModelUser authenticate(ModelUser modelUser) {
-        return repositoryUser.findById(modelUser.getUserId())
+    public ModelUser getAccount(ModelUser modelUser) {
+        return repositoryUser.findByUserEmail(modelUser.getUserEmail())
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 }
