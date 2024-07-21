@@ -15,6 +15,8 @@ public class FilterAfterAuthentication implements Filter {
         if(null != authentication) {
             log.info("User " + authentication.getName() + " is successfully authenticated and "
                     + "has the authorities " + authentication.getAuthorities().toString());
+        }else{
+            log.info("Direct Request came up...");
         }
         chain.doFilter(request,response);
     }

@@ -1,8 +1,11 @@
 package com.hammerbyte.sahas.services;
 
-import com.hammerbyte.sahas.models.ModelUser;
+import org.springframework.security.core.Authentication;
+
 
 public interface ServiceJWT {
 
-    public String createJWT(ModelUser modelUser);
+    public String createJWT(Authentication authentication);
+
+    public Authentication validateJWT(String requestHeader);
 } 

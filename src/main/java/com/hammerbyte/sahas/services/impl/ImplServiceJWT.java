@@ -1,49 +1,63 @@
 package com.hammerbyte.sahas.services.impl;
 
-import java.time.Instant;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
+import java.util.Date;
+import java.util.stream.Collectors;
+
+import javax.crypto.SecretKey;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
-import org.springframework.security.oauth2.jwt.JwsHeader;
-import org.springframework.security.oauth2.jwt.JwtClaimsSet;
-import org.springframework.security.oauth2.jwt.JwtEncoder;
-import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.stereotype.Service;
-import com.hammerbyte.sahas.models.ModelUser;
 import com.hammerbyte.sahas.services.ServiceJWT;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-
 
 @Service
 @Getter
 @Setter
 public class ImplServiceJWT implements ServiceJWT {
 
-   
     @Value("${app.jwt.secret}")
     private String jwtSecret;
 
     @Value("${app.jwt.expire}")
     private Long jwtExpire;
-    
+
+    @Value("${spring.application.name}")
+    private String appName;
 
     @Override
-    public String createJWT(ModelUser modelUser) {
+    public String createJWT(Authentication authentication) {
 
-        Instant now = Instant.now();
-        return jwtEncoder.encode(JwtEncoderParameters.from(
-                JwsHeader.with(MacAlgorithm.HS256).build(),
-                JwtClaimsSet.builder()
-                        .issuer(jwtIssuer)
-                        .issuedAt(now)
-                        .expiresAt(now.plusSeconds(jwtExpire))
-                        .subject(modelUser.getUserEmail())
-                        .claim("role", modelUser.getUserRole().name())
-                        .build()))
-                .getTokenValue();
+
+        Date now = new Date();
+        return Jwts.builder().issuer(appName).subject("JWT_TOKEN")
+                .claim("user_email", authentication.getName())
+                .claim("user_authorities", authentication.getAuthorities().stream().map(
+                        GrantedAuthority::getAuthority).collect(Collectors.joining(",")))
+                .issuedAt(now)
+                .expiration(new Date(now.getTime() + jwtExpire))
+                .signWith(Keys.hmacShaKeyFor(Base64.getDecoder().decode(jwtSecret))).compact();
+
     }
-    
+
+    @Override
+    public Authentication validateJWT(String jwt) {
+
+        Claims claims = Jwts.parser().verifyWith(Keys.hmacShaKeyFor(Base64.getDecoder().decode(jwtSecret)))
+                .build().parseSignedClaims(jwt).getPayload();
+
+        return new UsernamePasswordAuthenticationToken(claims.get("user_email").toString(), null,
+                AuthorityUtils.commaSeparatedStringToAuthorityList(claims.get("user_authorities").toString()));
+    }
+
 }

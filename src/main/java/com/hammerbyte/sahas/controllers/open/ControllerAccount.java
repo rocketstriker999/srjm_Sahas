@@ -11,11 +11,20 @@ import com.hammerbyte.sahas.services.ServiceJWT;
 import com.hammerbyte.sahas.services.ServiceUser;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import java.util.HashMap;
+import lombok.Getter;
+import lombok.Setter;
 
+import java.util.HashMap;
+import java.util.Optional;
+
+import javax.swing.text.html.Option;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
@@ -25,6 +34,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.security.core.Authentication;
 
 @AllArgsConstructor
+@Getter
+@Setter
 @RestController
 @RequestMapping("/account")
 public class ControllerAccount {
@@ -36,26 +47,28 @@ public class ControllerAccount {
     private PasswordEncoder passwordEncoder;
     private AuthenticationManager authenticationManager;
 
-     // user can send email and password to authenticate and get jwt token back
-    //  @PostMapping("/logout")
-    //  public ResponseEntity<Object> logout(@Valid @RequestBody DTOSignup dtoSignup, BindingResult bindingResult){
-
-    //     HashMap<String, Object> responseBody = new HashMap<>();
 
 
-    //     if (bindingResult.hasErrors()) {
+    // user can send email and password to authenticate and get jwt token back
+    // @PostMapping("/logout")
+    // public ResponseEntity<Object> logout(@Valid @RequestBody DTOSignup dtoSignup,
+    // BindingResult bindingResult){
 
-    //         for (ObjectError objectError : bindingResult.getAllErrors())
-    //             responseBody.put(objectError.getObjectName(), objectError.getDefaultMessage());
-    //         return ResponseEntity.badRequest().body(responseBody);
-    //     }else{
-            
-    //         //destroyWT token from authorization header 
+    // HashMap<String, Object> responseBody = new HashMap<>();
 
-    //     }
+    // if (bindingResult.hasErrors()) {
 
+    // for (ObjectError objectError : bindingResult.getAllErrors())
+    // responseBody.put(objectError.getObjectName(),
+    // objectError.getDefaultMessage());
+    // return ResponseEntity.badRequest().body(responseBody);
+    // }else{
 
-    //  }
+    // //destroyWT token from authorization header
+
+    // }
+
+    // }
 
     // user can send email and password to authenticate and get jwt token back
     @PostMapping("/login")
@@ -71,23 +84,19 @@ public class ControllerAccount {
         }
 
         try {
-            Authentication a = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(dtoLogin.getUserEmail(), dtoLogin.getUserPassword())
-            );
-            
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(dtoLogin.getUserEmail(), dtoLogin.getUserPassword()));
 
-            ModelUser modelUser = serviceUser.findByUserEmail(dtoLogin.getUserEmail()).orElseThrow(
-                () -> new UsernameNotFoundException("User not found")
-            );
-
-            responseBody.put("token", serviceJWT.createJWT(modelUser));
-            responseBody.put("user", a.getPrincipal());
-            return ResponseEntity.ok(responseBody);
+            if (authentication.isAuthenticated()) {
+                responseBody.put("token", serviceJWT.createJWT(authentication));
+                responseBody.put("user", authentication.getPrincipal());
+                return ResponseEntity.status(HttpStatus.OK).body(responseBody);
+            } else {
+                throw new UsernameNotFoundException("Invalid Credentials");
+            }
 
         } catch (Exception e) {
-            e.printStackTrace();
-            responseBody.put("error", "Invalid email or password");
-            return ResponseEntity.status(401).body(responseBody);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
         }
 
     }
@@ -106,11 +115,19 @@ public class ControllerAccount {
             modelUser.setUserEmail(dtoSignup.getUserEmail());
             modelUser.setUserPassword(passwordEncoder.encode(dtoSignup.getUserPassword()));
             modelUser.setUserName(dtoSignup.getUserName());
-            responseBody.put("token", serviceJWT.createJWT(modelUser));
-            responseBody.put("user", serviceAccount.createAccount(modelUser));
-            return ResponseEntity.ok(responseBody);
+
+            if(serviceUser.findByUserEmail(modelUser.getUserEmail()).isPresent()){
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User Already Exist");
+
+
+            }else{
+                serviceAccount.createAccount(modelUser);
+                return ResponseEntity.status(HttpStatus.CREATED).body("User Created");
+
+            }
+
+           
         }
     }
 
-   
 }

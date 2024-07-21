@@ -1,59 +1,51 @@
 package com.hammerbyte.sahas.filters;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.core.env.Environment;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import javax.crypto.SecretKey;
+import com.hammerbyte.sahas.services.ServiceJWT;
+
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 
+@AllArgsConstructor
+@Getter
+@Setter
 public class JWTTokenValidatorFilter extends OncePerRequestFilter {
-   
-    
-    @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-            throws ServletException, IOException {
-       String jwt = request.getHeader(ApplicationConstants.JWT_HEADER);
-       if(null != jwt) {
-           try {
-               Environment env = getEnvironment();
-               if (null != env) {
-                   String secret = env.getProperty(ApplicationConstants.JWT_SECRET_KEY,
-                           ApplicationConstants.JWT_SECRET_DEFAULT_VALUE);
-                   SecretKey secretKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
-                   if(null !=secretKey) {
-                       Claims claims = Jwts.parser().verifyWith(secretKey)
-                                .build().parseSignedClaims(jwt).getPayload();
-                       String username = String.valueOf(claims.get("username"));
-                       String authorities = String.valueOf(claims.get("authorities"));
-                       Authentication authentication = new UsernamePasswordAuthenticationToken(username, null,
-                               AuthorityUtils.commaSeparatedStringToAuthorityList(authorities));
-                       SecurityContextHolder.getContext().setAuthentication(authentication);
-                   }
-               }
 
-           } catch (Exception exception) {
-               throw new BadCredentialsException("Invalid Token received!");
-           }
-       }
-        filterChain.doFilter(request,response);
+    
+    private String jwtHeader;
+    private ServiceJWT serviceJWT;
+
+    @Override
+    protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response,
+            @NonNull FilterChain filterChain) throws IOException, ServletException {
+
+        try {
+            SecurityContextHolder.getContext().setAuthentication(serviceJWT.validateJWT(request.getHeader(jwtHeader)));
+        } catch (Exception exception) {
+            throw new BadCredentialsException("Invalid Token received!");
+        }
+
+        filterChain.doFilter(request, response);
     }
 
     @Override
-    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-        return request.getServletPath().equals("/user");
+    protected boolean shouldNotFilter(@NonNull HttpServletRequest request) throws ServletException {
+        String header = request.getHeader(jwtHeader);
+        return header == null || header.isEmpty();
     }
 
 }
