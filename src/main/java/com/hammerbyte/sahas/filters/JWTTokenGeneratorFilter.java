@@ -24,14 +24,12 @@ import java.util.stream.Collectors;
 
 public class JWTTokenGeneratorFilter extends OncePerRequestFilter {
 
-    @Value("${app.jwt.secret}")
-    private String jwtSecret;
+   
 
     @Value("${app.jwt.header}")
     private String jwtHeader;
 
-    @Value("${app.jwt.expire}")
-    private Long jwtExpire;
+  
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response,
@@ -39,8 +37,6 @@ public class JWTTokenGeneratorFilter extends OncePerRequestFilter {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (null != authentication) {
-            Environment env = getEnvironment();
-            if (null != env) {
 
                 SecretKey secretKey = Keys.hmacShaKeyFor(Base64.getDecoder().decode(jwtSecret));
                 String jwt = Jwts.builder().issuer("Sahas").subject("JWT Token")
@@ -51,7 +47,7 @@ public class JWTTokenGeneratorFilter extends OncePerRequestFilter {
                         .expiration(new Date((new Date()).getTime() + jwtExpire))
                         .signWith(secretKey).compact();
                 response.setHeader(jwtHeader, jwt);
-            }
+         
         }
         filterChain.doFilter(request, response);
     }

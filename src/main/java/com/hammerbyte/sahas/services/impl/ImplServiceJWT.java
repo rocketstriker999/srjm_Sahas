@@ -18,13 +18,16 @@ import lombok.Setter;
 
 
 @Service
-@RequiredArgsConstructor
 @Getter
 @Setter
 public class ImplServiceJWT implements ServiceJWT {
 
    
+    @Value("${app.jwt.secret}")
+    private String jwtSecret;
 
+    @Value("${app.jwt.expire}")
+    private Long jwtExpire;
     
 
     @Override
