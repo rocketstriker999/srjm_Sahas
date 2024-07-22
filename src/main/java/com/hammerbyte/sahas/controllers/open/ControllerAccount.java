@@ -48,28 +48,6 @@ public class ControllerAccount {
     private AuthenticationManager authenticationManager;
 
 
-
-    // user can send email and password to authenticate and get jwt token back
-    // @PostMapping("/logout")
-    // public ResponseEntity<Object> logout(@Valid @RequestBody DTOSignup dtoSignup,
-    // BindingResult bindingResult){
-
-    // HashMap<String, Object> responseBody = new HashMap<>();
-
-    // if (bindingResult.hasErrors()) {
-
-    // for (ObjectError objectError : bindingResult.getAllErrors())
-    // responseBody.put(objectError.getObjectName(),
-    // objectError.getDefaultMessage());
-    // return ResponseEntity.badRequest().body(responseBody);
-    // }else{
-
-    // //destroyWT token from authorization header
-
-    // }
-
-    // }
-
     // user can send email and password to authenticate and get jwt token back
     @PostMapping("/login")
     public ResponseEntity<Object> login(@Valid @RequestBody DTOLogin dtoLogin, BindingResult bindingResult) {
@@ -77,7 +55,6 @@ public class ControllerAccount {
         HashMap<String, Object> responseBody = new HashMap<>();
 
         if (bindingResult.hasErrors()) {
-
             for (ObjectError objectError : bindingResult.getAllErrors())
                 responseBody.put(objectError.getObjectName(), objectError.getDefaultMessage());
             return ResponseEntity.badRequest().body(responseBody);
@@ -86,7 +63,6 @@ public class ControllerAccount {
         try {
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(dtoLogin.getUserEmail(), dtoLogin.getUserPassword()));
-
             if (authentication.isAuthenticated()) {
                 responseBody.put("token", serviceJWT.createJWT(authentication));
                 responseBody.put("user", authentication.getPrincipal());
@@ -94,7 +70,6 @@ public class ControllerAccount {
             } else {
                 throw new UsernameNotFoundException("Invalid Credentials");
             }
-
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
         }
@@ -118,12 +93,9 @@ public class ControllerAccount {
 
             if(serviceUser.findByUserEmail(modelUser.getUserEmail()).isPresent()){
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User Already Exist");
-
-
             }else{
                 serviceAccount.createAccount(modelUser);
                 return ResponseEntity.status(HttpStatus.CREATED).body("User Created");
-
             }
 
            

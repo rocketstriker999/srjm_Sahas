@@ -33,7 +33,7 @@ public class JWTTokenGeneratorFilter extends OncePerRequestFilter {
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response,
             @NonNull FilterChain filterChain) throws ServletException, IOException {
 
-        //if user is authenticated then onl token can be generated
+        //if user is authenticated then only token can be generated
         if (SecurityContextHolder.getContext().getAuthentication()!=null) {
                 response.setHeader(jwtHeader, serviceJWT.createJWT(SecurityContextHolder.getContext().getAuthentication()));
         }

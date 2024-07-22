@@ -21,19 +21,20 @@ import lombok.Setter;
 @Getter
 @Setter
 @Component
-public class ImplUserDetailsService implements UserDetailsService{
+public class ImplUserDetailsService implements UserDetailsService {
 
     private RepositoryUser repositoryUser;
 
     @Override
     public UserDetails loadUserByUsername(String userEmail) throws UsernameNotFoundException {
-       Optional<ModelUser> modelUser = repositoryUser.findByUserEmail(userEmail);
-            if (modelUser.isPresent()) {
-                return new User(modelUser.get().getUserEmail(), modelUser.get().getUserPassword(),
-                        List.of(new SimpleGrantedAuthority(modelUser.get().getUserRole().name())));
-            } else {
-                throw new UsernameNotFoundException("Invalid Credentials");
-            }
+        Optional<ModelUser> modelUser = repositoryUser.findByUserEmail(userEmail);
+        if (modelUser.isPresent()) {
+
+            return new User(modelUser.get().getUserEmail(), modelUser.get().getUserPassword(),
+                    List.of(new SimpleGrantedAuthority(modelUser.get().getUserRole().name())));
+        } else {
+            throw new UsernameNotFoundException("Invalid Credentials");
+        }
     }
-    
+
 }

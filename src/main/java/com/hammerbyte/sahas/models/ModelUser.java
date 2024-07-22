@@ -1,6 +1,9 @@
 package com.hammerbyte.sahas.models;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import com.hammerbyte.sahas.enums.EnumUserRole;
 
 import jakarta.persistence.Column;
@@ -16,6 +19,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+
+import java.util.Collection;
 import java.util.Date;
 
 //keep class name AppUser - Conflicts with User Class From Spring Security
@@ -48,5 +53,9 @@ public class ModelUser{
     @Column(updatable = false)
     @CreationTimestamp  
     private Date createdAt;
+
+   
+
+
 
 }
