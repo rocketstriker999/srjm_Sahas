@@ -1,18 +1,11 @@
 package com.hammerbyte.sahas.models;
 
-import org.apache.catalina.Group;
-import org.apache.catalina.Role;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
-import com.hammerbyte.sahas.enums.EnumUserRole;
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -28,7 +21,6 @@ import lombok.ToString;
 
 import java.util.Collection;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.Set;
 
 //keep class name AppUser - Conflicts with User Class From Spring Security
