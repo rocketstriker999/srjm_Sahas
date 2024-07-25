@@ -1,6 +1,5 @@
 package com.hammerbyte.sahas.configurations;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -16,28 +15,22 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.password.HaveIBeenPwnedRestApiPasswordChecker;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
-
-
-import com.hammerbyte.sahas.filters.JWTTokenValidatorFilter;
-import com.hammerbyte.sahas.services.ServiceJWT;
+import com.hammerbyte.sahas.filters.FilterAuthentication;
 
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import lombok.NonNull;
+
 
 @RequiredArgsConstructor
-@Getter
-@Setter
+@Getter @Setter
 @Configuration
 @EnableWebSecurity
 public class ConfigurationSecurity {
 
-    @Value("${app.jwt.header}")
-    private String jwtHeader;
-
     @NonNull
-    private ServiceJWT serviceJWT;
+    private FilterAuthentication jwtTokenValidatorFilter;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
@@ -48,18 +41,16 @@ public class ConfigurationSecurity {
                 // disable basic auth with form submission only jwt will be allowed
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
-                
-                .addFilterBefore(new JWTTokenValidatorFilter(jwtHeader, serviceJWT), BasicAuthenticationFilter.class)
+
+                .addFilterBefore(jwtTokenValidatorFilter, BasicAuthenticationFilter.class)
                 // apply path security
                 .authorizeHttpRequests(auth ->
                 // remove security for /account path
                 auth
                         .requestMatchers("/account/**").permitAll()
-                        .anyRequest().authenticated()
-                )
+                        .anyRequest().authenticated())
                 // make sessions stateless
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-        // add exception handling
 
         // build and return the Security Filter Chain
         return httpSecurity.build();
@@ -84,5 +75,7 @@ public class ConfigurationSecurity {
     public CompromisedPasswordChecker compromisedPasswordChecker() {
         return new HaveIBeenPwnedRestApiPasswordChecker();
     }
+
+   
 
 }

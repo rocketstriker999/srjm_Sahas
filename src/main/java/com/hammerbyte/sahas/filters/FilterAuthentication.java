@@ -4,31 +4,28 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.lang.NonNull;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.hammerbyte.sahas.services.ServiceJWT;
 
 import java.io.IOException;
 
-@AllArgsConstructor
-@Getter
-@Setter
+@RequiredArgsConstructor
 @Slf4j
-public class JWTTokenValidatorFilter extends OncePerRequestFilter {
+@Component
+public class FilterAuthentication extends OncePerRequestFilter {
 
+    @Value("${app.jwt.header}")
     private String jwtHeader;
+
+    @lombok.NonNull
     private ServiceJWT serviceJWT;
 
     @Override
@@ -37,30 +34,28 @@ public class JWTTokenValidatorFilter extends OncePerRequestFilter {
 
         try {
             SecurityContextHolder.getContext().setAuthentication(serviceJWT.validateJWT(request.getHeader(jwtHeader)));
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-            log.info("User " + authentication.getName() + " is successfully authenticated and "
-                    + "has the getPrincipal " + authentication.getAuthorities().toString());
-
-        } catch (Exception exception) {
-            exception.printStackTrace();
-           
+        } catch (Exception ex) {
+            log.info("JWT Authentication Failed" );
         }
-
-        filterChain.doFilter(request, response);
+        finally{
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            
+            if(authentication!=null && authentication.isAuthenticated()){
+                log.info(authentication.getName() + " - "+authentication.getAuthorities().toString()+" Validated" );
+                filterChain.doFilter(request, response);
+            }else{
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            }
+        }
+        
     }
 
     @Override
     protected boolean shouldNotFilter(@NonNull HttpServletRequest request) throws ServletException {
-        log.info("Checking For JWT Token....");
         String header = request.getHeader(jwtHeader);
-        if (header == null || header.isEmpty()) {
-            log.info("NO JWT Header Found....Direct Request came up");
-            return true;
-        } else {
-            return false;
-        }
-
+        return header == null || header.isEmpty();
     }
+
+    
 
 }

@@ -5,7 +5,6 @@ import java.util.Base64;
 import java.util.Date;
 import java.util.stream.Collectors;
 
-import javax.crypto.SecretKey;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

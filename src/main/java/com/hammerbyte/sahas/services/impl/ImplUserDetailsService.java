@@ -29,9 +29,7 @@ public class ImplUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String userEmail) throws UsernameNotFoundException {
         Optional<ModelUser> modelUser = repositoryUser.findByUserEmail(userEmail);
         if (modelUser.isPresent()) {
-
-            return new User(modelUser.get().getUserEmail(), modelUser.get().getUserPassword(),
-                    List.of(new SimpleGrantedAuthority(modelUser.get().getUserRole().name())));
+            return modelUser.get();
         } else {
             throw new UsernameNotFoundException("Invalid Credentials");
         }
