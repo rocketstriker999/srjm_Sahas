@@ -35,19 +35,16 @@ public class FilterAuthentication extends OncePerRequestFilter {
         try {
             SecurityContextHolder.getContext().setAuthentication(serviceJWT.validateJWT(request.getHeader(jwtHeader)));
         } catch (Exception ex) {
-            log.info("JWT Authentication Failed" );
-        }
-        finally{
+            log.info("JWT Authentication Failed");
+        } finally {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            
-            if(authentication!=null && authentication.isAuthenticated()){
-                log.info(authentication.getName() + " - "+authentication.getAuthorities().toString()+" Validated" );
+            if (authentication != null && authentication.isAuthenticated()) {
+                log.info(authentication.getName() + " - " + authentication.getAuthorities().toString() + " Validated");
                 filterChain.doFilter(request, response);
-            }else{
+            } else {
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             }
         }
-        
     }
 
     @Override
@@ -55,7 +52,5 @@ public class FilterAuthentication extends OncePerRequestFilter {
         String header = request.getHeader(jwtHeader);
         return header == null || header.isEmpty();
     }
-
-    
 
 }

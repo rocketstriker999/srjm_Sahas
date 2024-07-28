@@ -30,7 +30,7 @@ import lombok.Setter;
 public class ConfigurationSecurity {
 
     @NonNull
-    private FilterAuthentication jwtTokenValidatorFilter;
+    private FilterAuthentication filterAuthentication;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
@@ -42,11 +42,11 @@ public class ConfigurationSecurity {
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
 
-                .addFilterBefore(jwtTokenValidatorFilter, BasicAuthenticationFilter.class)
+                .addFilterBefore(filterAuthentication, BasicAuthenticationFilter.class)
                 // apply path security
                 .authorizeHttpRequests(auth ->
-                // remove security for /account path
-                auth
+                        // remove security for /account path
+                        auth
                         .requestMatchers("/account/**").permitAll()
                         .anyRequest().authenticated())
                 // make sessions stateless

@@ -1,3 +1,7 @@
-export default function Dashboard(){
-    return <h1>Home Page</h1>
+import React from 'react';
+import { Button } from 'primereact/button';
+export default function Dashboard() {
+    return (
+        <Button  label="Submit" />
+    );
 }
