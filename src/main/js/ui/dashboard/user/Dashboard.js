@@ -36,7 +36,7 @@ export default () => {
     const imageTemplate = (image) => {
         return (
             <div className="carousel-item">
-                <img src={image} alt="Random"  />
+                <img className='w-full' src={image} alt="Random" />
             </div>
         );
     };
@@ -45,16 +45,13 @@ export default () => {
 
     return (
 
-        <div className='flex justify-content-center'>
-            <div className="w-9">
-                <Carousel responsiveOptions={responsiveOptions}  value={images} numVisible={1} numScroll={1} orientation="horizontal" itemTemplate={imageTemplate} />
-                <div className='px-6'>
-                    <h1>User Dashboard</h1>
-                </div>
-                
-            </div>
 
+        <div className="w-full">
+            <Carousel showNavigators={false} responsiveOptions={responsiveOptions} value={images} numVisible={1} numScroll={1} orientation="horizontal" itemTemplate={imageTemplate} />
+            <h1>User Dashboard</h1>
         </div>
+
+
 
 
 

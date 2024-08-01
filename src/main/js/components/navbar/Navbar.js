@@ -87,7 +87,7 @@ export default function Navbar() {
 
 
     return (
-        <Menubar className='px-4  shadow-3' start={<Brand />} model={items} end={end} />
+        <Menubar className='px-4 shadow-3 z-5 relative' start={<Brand />} model={items} end={end} />
 
     )
 

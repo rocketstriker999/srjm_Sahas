@@ -47,7 +47,7 @@ public class ConfigurationSecurity {
                 .authorizeHttpRequests(auth ->
                         // remove security for /account path
                         auth
-                        .requestMatchers("/account").permitAll()
+                        .requestMatchers("/","/account").permitAll()
                         .anyRequest().permitAll())
                 // make sessions stateless
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
