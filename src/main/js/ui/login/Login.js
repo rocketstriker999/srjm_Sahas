@@ -16,7 +16,7 @@ export default function Login() {
             Login Card
         </p>
         <Button onClick={() => {
-            dispatch(setCurrentUser({ name: "U1", role: "USER", authorities: [] }))
+            dispatch(setCurrentUser({ name: "U1", role: "USER" }))
         }} label='login as user'></Button>
         <Button onClick={() => {
             dispatch(setCurrentUser({ name: "U2", role: "FADMIN", authorities: ["view_sec1", "view_sec2", "manage_firm", "manage_some_data"] }))

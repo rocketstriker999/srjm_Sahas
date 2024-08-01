@@ -1,7 +1,6 @@
 import { Route, Routes } from "react-router-dom";
 import UserDashboard from "../dashboard/user/Dashboard";
 import FirmAdminDashboard from "../dashboard/fadmin/Dashboard";
-
 import CustomError from "../../components/error/CustomError";
 import Navbar from "../../components/navbar/Navbar";
 import './App.css';
@@ -19,7 +18,7 @@ export default function App() {
     return (
         <>
             <Navbar />
-            <div className="container px-8 mt-4">
+            <div className="container">
                 <Routes>
                     <Route path="/" element={<UserDashboard />}></Route>
 

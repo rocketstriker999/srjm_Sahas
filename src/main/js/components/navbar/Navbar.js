@@ -51,7 +51,7 @@ export default function Navbar() {
             label: 'Manage Firm',
             icon: 'pi pi-fw pi-cog',
             command: () => navigate('/manage-firm'),
-            visible: currentLoggedInUser && (currentLoggedInUser.role==='FADMIN' || currentLoggedInUser.role==='HADMIN')
+            visible: currentLoggedInUser && (currentLoggedInUser.role === 'FADMIN' || currentLoggedInUser.role === 'HADMIN')
 
         },
         {
@@ -79,18 +79,16 @@ export default function Navbar() {
     ];
 
 
-    const end = currentLoggedInUser ? (
+    const end =
         <div className="flex align-items-center gap-3">
             <InputText placeholder="Search" type="text" className="w-8rem sm:w-auto" />
-            <NavLink to='/profile'><Avatar image="https://primefaces.org/cdn/primereact/images/avatar/amyelsner.png" shape="circle" /></NavLink>
-            
+            {currentLoggedInUser ? (<NavLink to='/profile'><Avatar image="https://primefaces.org/cdn/primereact/images/avatar/amyelsner.png" shape="circle" /></NavLink>) : null}
         </div>
-    ) : null;
+
 
     return (
-        <div className="card px-4 mt-4">
-            <Menubar className='px-4' start={<Brand />} model={items} end={end} />
-        </div>
+        <Menubar className='px-4  shadow-3' start={<Brand />} model={items} end={end} />
+
     )
 
 }
