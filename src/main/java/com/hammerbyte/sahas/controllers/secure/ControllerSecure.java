@@ -1,7 +1,11 @@
 package com.hammerbyte.sahas.controllers.secure;
 
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.stream.DoubleStream;
+
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -16,18 +20,15 @@ public class ControllerSecure {
         return "secure data fadmindata";
     }
 
-
     @PreAuthorize("hasAuthority('HADMIN')")
     @GetMapping(path = "/hadmindata")
     public String hadmindata() {
         return "secure data hadmindata";
     }
-
     
     @GetMapping(path = "/common")
     public String commoString() {
         return "common data for user";
     }
-
 
 }

@@ -1,59 +1,25 @@
-import React from 'react';
-import { Carousel } from 'primereact/carousel';
-
-export default () => {
-
-    const images = [
-        'https://img-c.udemycdn.com/notices/web_carousel_slide/image/6ccb6922-a6f8-4e41-baa2-ed0cce1ba2f6.png',
-        'https://img-c.udemycdn.com/notices/web_carousel_slide/image/6ccb6922-a6f8-4e41-baa2-ed0cce1ba2f6.png',
-        'https://img-c.udemycdn.com/notices/web_carousel_slide/image/6ccb6922-a6f8-4e41-baa2-ed0cce1ba2f6.png'
-    ];
-
-    const responsiveOptions = [
-        {
-            breakpoint: '1400px',
-            numVisible: 1,
-            numScroll: 1
-        },
-        {
-            breakpoint: '1199px',
-            numVisible: 1,
-            numScroll: 1
-        },
-        {
-            breakpoint: '767px',
-            numVisible: 1,
-            numScroll: 1
-        },
-        {
-            breakpoint: '575px',
-            numVisible: 1,
-            numScroll: 1
-        }
-    ];
+import { Button } from 'primereact/button';
 
 
-    const imageTemplate = (image) => {
-        return (
-            <div className="carousel-item">
-                <img className='w-full' src={image} alt="Random" />
-            </div>
-        );
-    };
-
-
+export default function Dashboard() {
 
     return (
 
+        <div className="grid grid-nogutter surface-0 text-800">
+            <div className="col-12 md:col-6 p-6 text-center md:text-left flex align-items-center ">
+                <section>
+                    <span className="block text-6xl font-bold mb-1">Create the screens</span>
+                    <div className="text-6xl text-primary font-bold mb-3">your visitors deserve to see</div>
+                    <p className="mt-0 mb-4 text-700 line-height-3">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
 
-        <div className="w-full">
-            <Carousel showNavigators={false} responsiveOptions={responsiveOptions} value={images} numVisible={1} numScroll={1} orientation="horizontal" itemTemplate={imageTemplate} />
-            <h1>User Dashboard</h1>
+                    <Button label="Learn More" type="button" className="mr-3 p-button-raised" />
+                    <Button label="Live Demo" type="button" className="p-button-outlined" />
+                </section>
+            </div>
+            <div className="col-12 md:col-6 overflow-hidden">
+                <img src="https://blocks.primereact.org/demo/images/blocks/hero/hero-1.png" alt="hero-1" className="md:ml-auto block md:h-full" style={{ clipPath: 'polygon(8% 0, 100% 0%, 100% 100%, 0 100%)' }} />
+            </div>
         </div>
-
-
-
-
 
     );
 }
