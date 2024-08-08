@@ -1,0 +1,22 @@
+/* TrendingCourses.module.css */
+.customTabMenu {
+    background-color: green;
+    border: none;
+}
+
+.customTabMenu > .p-tabmenuitem {
+    background-color: green;
+}
+
+.customTabMenu > .p-menuitem-link {
+    background-color: green;
+}
+
+.customTabMenu .p-tabmenuitem:not(.p-tabmenuitem-selected):hover {
+    background-color: transparent;
+}
+
+.customTabMenu .p-tabmenuitem.p-tabmenuitem-selected {
+    background-color: transparent;
+    border-bottom: 8px solid var(--primary-color); /* Adjust this color as needed */
+}

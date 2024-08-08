@@ -1,15 +1,15 @@
 import { Route, Routes } from "react-router-dom";
 import UserDashboard from "../dashboard/user/Dashboard";
 import FirmAdminDashboard from "../dashboard/fadmin/Dashboard";
-import CustomError from "../../components/error/CustomError";
-import Navbar from "../../components/navbar/Navbar";
+import CustomError from "../../shared/error/CustomError";
+import Navbar from "../../shared/navbar/Navbar";
 import './App.css';
 import Profile from "../profile/Profile";
 import Login from "../login/Login";
-import Forbidden from "../../components/security/Forbidden";
-import HasAuthentication from "../../components/security/HasAuthetication";
-import HasNoAuthentication from "../../components/security/HasNoAuthentication";
-import HasRole from "../../components/security/HasRole";
+import Forbidden from "../../shared/security/Forbidden";
+import HasAuthentication from "../../shared/security/HasAuthetication";
+import HasNoAuthentication from "../../shared/security/HasNoAuthentication";
+import HasRole from "../../shared/security/HasRole";
 import Help from "../help/Help";
 import Contact from "../contact/Contact";
 

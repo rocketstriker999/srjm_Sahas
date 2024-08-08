@@ -1,6 +1,7 @@
 
 import CarouselHeader from './components/CarouselHeader';
-
+import { Divider } from 'primereact/divider';
+import TrendingCourses from './components/TrendingCourses/TrendingCourses';
 
 export default function Dashboard() {
 
@@ -31,6 +32,11 @@ export default function Dashboard() {
         }
     ]
 
-    return <CarouselHeader headLine="Sahas Smart Studies" subHeadLine="Start Digital Learning" description="Testing Lines Samples" carouselData={myData} />
+    return (<>
+    
+        <CarouselHeader headLine="Sahas Smart Studies" subHeadLine="Learn Digitally" description="In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content." carouselData={myData} />
+        <TrendingCourses/>
+        
+    </>)
 
 }

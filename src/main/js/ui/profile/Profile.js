@@ -1,4 +1,3 @@
-import HasAuthentication from "../../components/security/HasAuthetication";
 
 
 export default function Profile() {
