@@ -25,6 +25,4 @@ public class ImplServiceUser implements ServiceUser {
         return repositoryUser.findByUserEmail(userEmail);
     }
 
-   
-
 }

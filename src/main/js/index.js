@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import reportWebVitals from './reportWebVitals';
-import App from './ui/app/App';
+import App from './components/ui/App';
 import { Provider } from 'react-redux'
 import { PrimeReactProvider } from "primereact/api";
 import "primereact/resources/themes/lara-light-indigo/theme.css";
@@ -15,7 +15,6 @@ import state from './redux/state';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <React.StrictMode>
     <BrowserRouter>
       <PrimeReactProvider value={{ ripple: true, appendTo: 'self', }}>
         <Provider store={state}>
@@ -23,7 +22,6 @@ root.render(
         </Provider>
       </PrimeReactProvider>
     </BrowserRouter>
-  </React.StrictMode>
 );
 
 reportWebVitals();

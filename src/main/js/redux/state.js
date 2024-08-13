@@ -1,10 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit';
-import authReducer from './authSlice';
+import reducerAuth from './sliceAuth';
+import reducerTemplate from './sliceTemplate';
 
 
 const state = configureStore({
   reducer: {
-    authState: authReducer,
+    stateAuth: reducerAuth,
+    stateTemplate: reducerTemplate,
+
   },
 });
 

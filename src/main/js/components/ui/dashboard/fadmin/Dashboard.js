@@ -2,7 +2,7 @@ import React from 'react';
 import { Button } from 'primereact/button';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { setCurrentUser, removeCurrentUser } from '../../../redux/authSlice';
+import { setCurrentUser, removeCurrentUser } from '../../../../redux/sliceAuth';
 
 export default ()=> {
 

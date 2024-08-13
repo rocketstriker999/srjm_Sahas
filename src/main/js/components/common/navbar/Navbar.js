@@ -10,7 +10,10 @@ import { useSelector } from 'react-redux';
 
 export default function Navbar() {
 
-    const currentLoggedInUser = useSelector((state) => state.authState.user);
+    const currentLoggedInUser = useSelector((state) => state.stateAuth.user);
+
+    const templateData = useSelector((state) => state.stateTemplate.templateDetails);
+
     const navigate = useNavigate();
 
     const itemRenderer = (item) => (
@@ -22,22 +25,17 @@ export default function Navbar() {
         </NavLink>
     );
 
-
     const items = [
 
         {
             label: 'Courses',
             icon: 'pi pi-fw pi-book',
-            items: [
-                {
-                    label: '11th',
-                    icon: 'pi pi-palette',
-                },
-                {
-                    label: '12th',
-                    icon: 'pi pi-palette'
+            items: templateData.data ? templateData.data.map((categoryData) => {
+                return {
+                    label: categoryData.categoryName,
+                    icon: 'pi pi-fw pi-sign-in',
                 }
-            ]
+            }) : []
         },
 
         {
@@ -48,10 +46,17 @@ export default function Navbar() {
 
         },
         {
-            label: 'Manage Firm',
+            label: 'Your Firm',
             icon: 'pi pi-fw pi-cog',
             command: () => navigate('/manage-firm'),
             visible: currentLoggedInUser && (currentLoggedInUser.role === 'FADMIN' || currentLoggedInUser.role === 'HADMIN')
+
+        },
+        {
+            label: 'Manage Firms',
+            icon: 'pi pi-fw pi-prime',
+            command: () => navigate('/manage-firm'),
+            visible: currentLoggedInUser && currentLoggedInUser.role === 'HADMIN'
 
         },
         {
@@ -77,7 +82,6 @@ export default function Navbar() {
             visible: currentLoggedInUser
         },
     ];
-
 
     const end =
         <div className="flex align-items-center gap-3">

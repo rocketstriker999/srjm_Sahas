@@ -34,7 +34,7 @@ export default function Dashboard() {
 
     return (<>
     
-        <CarouselHeader headLine="Sahas Smart Studies" subHeadLine="Learn Digitally" description="In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content." carouselData={myData} />
+        <CarouselHeader  headLine="Sahas Smart Studies" subHeadLine="Learn Digitally" description="In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content." carouselData={myData} />
         <TrendingCourses/>
         
     </>)

@@ -1,9 +1,9 @@
 
 import { Button } from 'primereact/button';
 import { Card } from 'primereact/card';
-import { setCurrentUser, removeCurrentUser } from '../../redux/authSlice';
+import { setCurrentUser, removeCurrentUser } from '../../redux/sliceAuth';
 
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
 export default function Login() {
 

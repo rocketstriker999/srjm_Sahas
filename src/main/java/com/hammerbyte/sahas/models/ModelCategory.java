@@ -26,7 +26,6 @@ import lombok.ToString;
 @Table(name = "categories")
 public class ModelCategory {
 
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long categoryId;

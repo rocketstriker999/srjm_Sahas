@@ -1,5 +1,6 @@
 import { TabMenu } from 'primereact/tabmenu';
 import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
 export default function TrendingCourses() {
 
     const [activeIndex, setActiveIndex] = useState(0);
@@ -10,7 +11,6 @@ export default function TrendingCourses() {
         { label: 'FY BCOM' },
         { label: 'SY BCOM' }
     ];
-
 
     return (
         <div className='surface-100 w-full flex justify-content-center align-items-center py-4 flex-column'>
@@ -25,10 +25,7 @@ export default function TrendingCourses() {
 
                         activeIndex={activeIndex}
 
-                        onTabChange={(e) => {
-                            console.log(e.index)
-                            setActiveIndex(e.index);
-                        }}
+                        onTabChange={(e) => setActiveIndex(e.index)}
 
                         pt={{
                             action: {

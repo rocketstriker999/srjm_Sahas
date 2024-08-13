@@ -49,7 +49,7 @@ export default function CarouselHeader({ headLine, subHeadLine, description, car
                 </section>
             </div>
             <div className="col-12 lg:col-6 overflow-hidden flex align-items-center justify-content-center">
-                <Carousel value={carouselData} numScroll={1}
+                <Carousel autoplayInterval={3000} circular value={carouselData} numScroll={1}
                     numVisible={3} responsiveOptions={responsiveOptions} itemTemplate={carouselTemplate} />
             </div>
         </div>)

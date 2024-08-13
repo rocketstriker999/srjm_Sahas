@@ -12,6 +12,7 @@ public class SahasApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(SahasApplication.class, args);
+		
 	}
 
 }

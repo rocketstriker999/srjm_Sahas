@@ -7,7 +7,6 @@ plugins {
 group = 'com.hammerbyte'
 version = '0.0.1-SNAPSHOT'
 
-
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(17)
@@ -50,7 +49,6 @@ dependencies {
 
 }
 
-
 //Junit5
 tasks.named('test') {
     useJUnitPlatform()
@@ -58,20 +56,28 @@ tasks.named('test') {
 
 //React Project Build 
 task buildReact(type: Exec) {
-    
-    commandLine 'sh', '-c', 'npm install && npm run build'
+    commandLine 'sh', '-c', 'npm run build'
 }
 
 // Define clean task to delete 'web-app' folder
 task cleanReact(type: Delete) {
-    delete 'node_modules'
+    delete 'package-lock.json'
     delete 'src/main/resources/web-app'
 }
 
-tasks.named('clean') {
-    dependsOn cleanReact
+task cleanJava(type: Delete) {
+    delete 'bin'
 }
 
-tasks.named('build') {
+tasks.named('clean') {
+    dependsOn cleanJava,cleanReact
+}
+
+tasks.named('processResources') {
     dependsOn buildReact
 }
+
+//to build react project and java both run ./gradlew clean build
+
+//start app
+//  ./gradlew bootRun

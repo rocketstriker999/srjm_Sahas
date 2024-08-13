@@ -3,7 +3,7 @@ module.exports = {
 	paths: function (paths, env) {
 
 		// use this to check original paths:
-		// console.log(paths)
+		
 
 
 		const root = paths.appPath
