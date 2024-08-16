@@ -37,6 +37,5 @@ public class ModelProduct {
     @JoinColumn(name = "product_id")
     private Set<ModelCourse> modelCourses;
     private boolean productVisible = true;
-
    
 }

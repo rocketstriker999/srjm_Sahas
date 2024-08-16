@@ -6,15 +6,15 @@ import { Avatar } from 'primereact/avatar';
 import Brand from "./Brand/Brand";
 import { Badge } from 'primereact/badge';
 import { useSelector } from 'react-redux';
+import useAPI from '../../../hooks/useAPI';
 
 
 export default function Navbar() {
 
     const currentLoggedInUser = useSelector((state) => state.stateAuth.user);
-
-    const templateData = useSelector((state) => state.stateTemplate.templateDetails);
-
     const navigate = useNavigate();
+
+    const [productCategories, isLoadingProductCategories, errorProductCategories ] = useAPI({ requestPath: "template-details/product-categories" });
 
     const itemRenderer = (item) => (
         <NavLink to={item.to} className="flex align-items-center p-menuitem-link">
@@ -25,17 +25,18 @@ export default function Navbar() {
         </NavLink>
     );
 
+
     const items = [
 
         {
             label: 'Courses',
             icon: 'pi pi-fw pi-book',
-            items: templateData.data ? templateData.data.map((categoryData) => {
+            items: productCategories.map(category => {
                 return {
-                    label: categoryData.categoryName,
+                    label: category.categoryName,
                     icon: 'pi pi-fw pi-sign-in',
                 }
-            }) : []
+            })
         },
 
         {
