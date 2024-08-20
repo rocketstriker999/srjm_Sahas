@@ -2,7 +2,10 @@ package com.hammerbyte.sahas.models;
 
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -31,8 +34,11 @@ public class ModelCategory {
     private Long categoryId;
     private String categoryName;
     private String categoryPhoto;
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id")
+
+    @OneToMany(mappedBy = "productCategory", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference
     private Set<ModelProduct> modelProducts;
+
+    @Column(nullable = false)
     private boolean categoryVisible = true;
 }

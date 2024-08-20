@@ -3,8 +3,8 @@ package com.hammerbyte.sahas.controllers.open;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.hammerbyte.sahas.dtos.DTOLogin;
-import com.hammerbyte.sahas.dtos.DTOSignup;
+import com.hammerbyte.sahas.dtos.request.DTOLogin;
+import com.hammerbyte.sahas.dtos.request.DTOSignup;
 import com.hammerbyte.sahas.exceptions.ExceptionInvalidCredentials;
 import com.hammerbyte.sahas.exceptions.ExceptionInvalidDetails;
 import com.hammerbyte.sahas.exceptions.ExceptionMissingRequiredFeilds;

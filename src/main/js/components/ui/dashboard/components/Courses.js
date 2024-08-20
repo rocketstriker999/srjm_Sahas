@@ -19,7 +19,7 @@ export default function Courses() {
         return (
             <div className="grid grid-nogutter">
                 {products.map((product, index) =>
-                    <Product price={1000} buyers={188} ratings={4} publisher="Bhavin Shah" title="Lorem ipsum dolor sit amet" imageURL={"https://placehold.co/100x50"} className="p-2 col-12 sm:col-4 lg:col-3 xl:col-3" key={product.productId} />)}
+                    <Product price={product.productPrice} buyers={188} ratings={4} publisher="Bhavin Shah" title={product.productName} imageURL={"https://placehold.co/100x50"} className="p-2 col-12 sm:col-4 lg:col-3 xl:col-3 " key={product.productId} />)}
             </div>
         );
     };
@@ -47,13 +47,14 @@ export default function Courses() {
                     return { label: showCaseProduct.categoryName }
                 })} />
 
-
             <DataView
                 unstyled={true}
                 value={showCaseProducts.length > 0 ? showCaseProducts[activeIndex].modelProducts : []}
                 listTemplate={listTemplate}
                 layout='grid'
             />
+
+            
 
         </div>);
 

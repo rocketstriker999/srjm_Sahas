@@ -1,11 +1,14 @@
 package com.hammerbyte.sahas.models;
 
-import java.util.List;
-import java.util.Set;
+import java.util.Date;
+
+import org.hibernate.annotations.CreationTimestamp;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -22,31 +25,35 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
 @ToString
 @Entity
-@Table(name = "products")
-public class ModelProduct {
+@Table(name = "purchases")
+public class ModelPurchase {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long productId;
-    private String productName;
-    private String productImage;
-    private String productDescription;
-    private double productPrice;
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id")
-    private List<ModelCourse> productCourses;
-    private boolean productVisible = true;
+    private Long purchaseId;
+
+    @Column(updatable = false)
+    @CreationTimestamp
+    private Date purchasedAt;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id", nullable = false)
+    private ModelProduct purchaseProduct;
+
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "testi_mony_id")
+    private ModelTestiMony userTestiMony;
 
     @ManyToOne
-    @JoinColumn(name = "category_id")
+    @JoinColumn(name = "user_id")
     @JsonBackReference
-    private ModelCategory productCategory;
-
+    private ModelUser purchaseUser;
 
 }

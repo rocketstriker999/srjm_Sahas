@@ -1,7 +1,11 @@
 package com.hammerbyte.sahas.services.impl;
 
 import java.util.List;
+import java.util.Set;
+
 import org.springframework.stereotype.Service;
+
+import com.hammerbyte.sahas.dtos.projections.ProjectionCategories;
 import com.hammerbyte.sahas.models.ModelCategory;
 import com.hammerbyte.sahas.repositories.RepositoryCategory;
 import com.hammerbyte.sahas.services.ServiceCategory;
@@ -21,5 +25,12 @@ public class ImplServiceCategory implements ServiceCategory{
     public List<ModelCategory> getAllCategories() {
         return repositoryCategory.findAll();
     }
+
+    @Override
+    public Set<ProjectionCategories> getProjectionCategories() {
+        return repositoryCategory.getProjectionCategories();
+    }
+
+    
     
 }

@@ -25,5 +25,6 @@ public class ModelCourse {
     private Long courseId;
     private String courseName;
     private String courseDescription;
+
    
 }

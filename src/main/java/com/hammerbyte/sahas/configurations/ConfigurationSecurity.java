@@ -83,6 +83,4 @@ public class ConfigurationSecurity {
         return new HaveIBeenPwnedRestApiPasswordChecker();
     }
 
-   
-
 }

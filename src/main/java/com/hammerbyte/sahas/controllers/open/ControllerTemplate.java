@@ -7,13 +7,23 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.springframework.data.domain.Limit;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.hammerbyte.sahas.dtos.projections.ProjectionCategories;
+import com.hammerbyte.sahas.dtos.projections.ProjectionTestiMonies;
 import com.hammerbyte.sahas.models.ModelCategory;
+import com.hammerbyte.sahas.models.ModelTestiMony;
+import com.hammerbyte.sahas.models.ModelUser;
+import com.hammerbyte.sahas.services.ServiceAccount;
 import com.hammerbyte.sahas.services.ServiceCategory;
 
 import lombok.AllArgsConstructor;
@@ -54,6 +64,7 @@ public class ControllerTemplate {
     }
 
     private ServiceCategory serviceCategory;
+    private ServiceAccount serviceAccount;
 
     @GetMapping("/showcase-products")
     public ResponseEntity<List<ModelCategory>> getProductsShowCase() {
@@ -61,8 +72,13 @@ public class ControllerTemplate {
     }
 
     @GetMapping("/product-categories")
-    public ResponseEntity<List<ModelCategory>> getProductCategories() {
-        return ResponseEntity.status(HttpStatus.OK).body(serviceCategory.getAllCategories());
+    public ResponseEntity<Set<ProjectionCategories>> getProductCategories() {
+        return ResponseEntity.status(HttpStatus.OK).body(serviceCategory.getProjectionCategories());
+    }
+
+    @GetMapping("/top-testimonies")
+    public ResponseEntity<List<ProjectionTestiMonies>> getTopTestiMonies(@RequestParam(value = "count", defaultValue = "4") Integer count) {
+        return ResponseEntity.status(HttpStatus.OK).body(serviceAccount.getTestiMonies(PageRequest.of(0, count)).getContent());
     }
 
 }

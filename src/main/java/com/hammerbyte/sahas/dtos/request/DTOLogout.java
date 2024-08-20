@@ -1,4 +1,4 @@
-package com.hammerbyte.sahas.dtos;
+package com.hammerbyte.sahas.dtos.request;
 
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;

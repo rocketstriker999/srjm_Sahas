@@ -3,11 +3,13 @@ import { Image } from 'primereact/image';
 import { Rating } from "primereact/rating";
 import { classNames } from 'primereact/utils';
 
+import productStyle from './product.module.css'
+
 export default function Product({ className, imageURL, title, ratings, buyers, price, publisher, isTrending }) {
 
 
     return <div className={className} >
-        <div className="border-1 surface-border surface-card border-round cursor-pointer">
+        <div className={classNames("border-1  surface-border surface-card border-round cursor-pointer",productStyle.product_card)}>
             <Image src={imageURL} width='100%' alt="product" />
             <div className='flex flex-column gap-2 p-3'>
                 <p className="font-bold text-800 text-base m-0">{title}</p>

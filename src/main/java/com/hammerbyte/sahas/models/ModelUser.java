@@ -3,6 +3,10 @@ package com.hammerbyte.sahas.models;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -35,8 +39,8 @@ import java.util.Set;
 public class ModelUser implements UserDetails{
     
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private String userId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long userId;
 
     @Column(nullable = false)
     private String userName;
@@ -51,12 +55,17 @@ public class ModelUser implements UserDetails{
     @JoinColumn(name = "user_id")
     private Set<ModelAuthority> userAuthorities;
 
+    @OneToMany(mappedBy = "purchaseUser", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference
+    private Set<ModelPurchase> userPurchases;
+
     @Column(updatable = false)
     @CreationTimestamp  
     private Date createdAt;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
+        
         return userAuthorities;
     }
 
